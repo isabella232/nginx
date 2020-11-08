@@ -33,6 +33,10 @@ property :variables, Hash,
 
 action_class do
   include Nginx::Cookbook::ResourceHelpers
+
+  def config_file
+    ::File.join(new_resource.conf_dir, "#{new_resource.name}.conf")
+  end
 end
 
 action :create do
@@ -45,7 +49,7 @@ action :create do
     end
   end
 
-  template ::File.join(new_resource.conf_dir, "#{new_resource.name}.conf") do
+  template config_file do
     cookbook new_resource.cookbook
     source   new_resource.template
 
@@ -60,17 +64,17 @@ action :create do
 
   add_to_list_resource(
     new_resource.conf_dir,
-    ::File.join(new_resource.conf_dir, "#{new_resource.name}.conf")
+    config_file
   )
 end
 
 action :delete do
-  file new_resource.config_file do
+  file config_file do
     action :delete
   end
 
   remove_from_list_resource(
     new_resource.conf_dir,
-    ::File.join(new_resource.conf_dir, "#{new_resource.name}.conf")
+    config_file
   )
 end
