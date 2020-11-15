@@ -105,7 +105,7 @@ action_class do
 end
 
 action :create do
-  %w(conf.d conf.site.d).each do |leaf|
+  %w(conf.d conf.http.d).each do |leaf|
     directory ::File.join(nginx_dir, leaf) do
       user 'root'
       group 'nginx'

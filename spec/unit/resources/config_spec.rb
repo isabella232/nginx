@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'nginx_config' do
-  step_into :nginx_config, :nginx_install
+  step_into :nginx_config, :nginx_install, :nginx_site
   platform  'ubuntu'
 
   before do
@@ -35,10 +35,11 @@ describe 'nginx_config' do
     end
 
     it do
-      is_expected.to create_template('/etc/nginx/conf.site.d/default-site.conf')
+      is_expected.to create_template('/etc/nginx/conf.http.d/default-site.conf')
         .with_cookbook('nginx')
         .with_source('default-site.erb')
         .with_variables(
+          name: 'default-site',
           nginx_log_dir: '/var/log/nginx',
           port: '80',
           server_name: 'Fauxhai',
@@ -48,6 +49,6 @@ describe 'nginx_config' do
 
     it { is_expected.to create_directory('/var/log/nginx').with_mode('0750').with_owner(nginx_user) }
     it { is_expected.to create_directory('/etc/nginx/conf.d').with_mode('0755') }
-    it { is_expected.to create_directory('/etc/nginx/conf.site.d').with_mode('0755') }
+    it { is_expected.to create_directory('/etc/nginx/conf.http.d').with_mode('0755') }
   end
 end
